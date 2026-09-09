@@ -1,4 +1,4 @@
-# Hello welcome to my website yo
+# Welcome to my website
 
 
-## i do cool projects yo
+## work in progress
