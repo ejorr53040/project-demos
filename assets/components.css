@@ -71,12 +71,15 @@ pre .s { color: var(--ok); }         /* string  */
    frame; the inner layer is the surface. drop-shadow follows the clipped
    alpha, so the hard shade is notched to match. */
 .bev {
+  display: block;                    /* also correct as a <span>: an inline
+                                        .bev-in with overflow:hidden clips a
+                                        canvas to nothing, silently */
   background: var(--border-strong);
   padding: 2px;
   clip-path: var(--notch);
   filter: drop-shadow(var(--shade) var(--shade) 0 var(--shade-color));
 }
-.bev-in { background: var(--surface); padding: var(--s4); clip-path: var(--notch); }
+.bev-in { display: block; background: var(--surface); padding: var(--s4); clip-path: var(--notch); }
 .bev-in.flush { padding: 0; overflow: hidden; }   /* for a strip or canvas at the edge */
 .bev.inset > .bev-in { background: var(--inset); }
 .bev.flat { filter: none; }                        /* no shade: dense lists, nested */

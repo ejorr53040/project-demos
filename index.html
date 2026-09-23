@@ -20,8 +20,17 @@
   /* ── hero ──────────────────────────────────────────────────────────────── */
   .hero {
     padding-block: var(--s8) var(--s7);
+    display: grid; gap: var(--s6);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+    align-items: center;
   }
   .hero h1 { margin-bottom: var(--s5); }
+
+  /* The scene stacks under the name on a phone; it never sets a min-width,
+     so the hero collapses to one column instead of scrolling sideways. */
+  @media (max-width: 760px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+  .hero-art { margin: 0; }
+  .hero-art canvas { width: 100%; height: auto; }
 
   /* the one terminal nod: the prompt keeps its shape, in brand colour */
   .prompt { margin: 0 0 var(--s4); }
@@ -94,6 +103,13 @@
           </div>
         </dl>
       </div>
+
+      <figure class="hero-art bev">
+        <div class="bev-in flush">
+          <canvas data-scene="ski-lift" role="img"
+                  aria-label="Pixel-art ski mountain with a groomed run and a chairlift"></canvas>
+        </div>
+      </figure>
     </header>
 
     <section>
