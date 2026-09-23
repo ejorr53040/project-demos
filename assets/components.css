@@ -1,0 +1,157 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ejorr/systems — components
+   Requires tokens.css. Every value here comes from a token; if you need a
+   colour that isn't in tokens.css, add it there, not here.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);            /* explicit: a transparent body borrows
+                                       the host's theme and breaks */
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── layout ─────────────────────────────────────────────────────────────── */
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: var(--gutter); }
+.stack   { display: flex; flex-direction: column; gap: var(--s5); }
+.row     { display: flex; align-items: center; gap: var(--s5); flex-wrap: wrap; }
+.grid    { display: grid; grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); gap: var(--s4); }
+.measure { max-width: var(--measure); }
+
+/* ── type ───────────────────────────────────────────────────────────────── */
+.h1, h1 {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: var(--t-xl); letter-spacing: -0.035em; line-height: 1.04;
+  margin: 0 0 var(--s4); text-wrap: balance;
+}
+.h2, h2 {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: var(--t-lg); letter-spacing: -0.02em; line-height: 1.2;
+  margin: 0 0 var(--s3); text-wrap: balance;
+}
+.h3, h3 {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: var(--t-md); letter-spacing: -0.015em; margin: 0 0 var(--s2);
+}
+.label {                             /* uppercase eyebrow / section marker */
+  font-family: var(--font-mono); font-size: var(--t-label); font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim);
+}
+.meta { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--dim); letter-spacing: 0.03em; }
+.dim  { color: var(--dim); }
+.mono { font-family: var(--font-mono); }
+.num  { font-variant-numeric: tabular-nums; }
+
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+
+code, .code {
+  font-family: var(--font-mono); font-size: 0.86em;
+  background: var(--inset); border: 1px solid var(--border);
+  padding: 1px 4px;
+}
+pre {
+  margin: 0; padding: var(--s4); overflow-x: auto;
+  background: var(--inset); font-family: var(--font-mono);
+  font-size: var(--t-xs); line-height: 1.65; color: var(--text);
+  clip-path: var(--notch);
+}
+pre .c { color: var(--dim); }        /* comment */
+pre .k { color: var(--link); }       /* keyword */
+pre .s { color: var(--ok); }         /* string  */
+
+/* ── bevel: the core surface primitive ───────────────────────────────────────
+   Two layers, because clip-path clips a border away. The outer layer IS the
+   frame; the inner layer is the surface. drop-shadow follows the clipped
+   alpha, so the hard shade is notched to match. */
+.bev {
+  background: var(--border-strong);
+  padding: 2px;
+  clip-path: var(--notch);
+  filter: drop-shadow(var(--shade) var(--shade) 0 var(--shade-color));
+}
+.bev-in { background: var(--surface); padding: var(--s4); clip-path: var(--notch); }
+.bev-in.flush { padding: 0; overflow: hidden; }   /* for a strip or canvas at the edge */
+.bev.inset > .bev-in { background: var(--inset); }
+.bev.flat { filter: none; }                        /* no shade: dense lists, nested */
+
+/* ── buttons: chunky keys. They displace on press, like a physical key. ──── */
+.btn {
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 700;
+  letter-spacing: 0.03em; padding: 10px 14px;
+  border: 0; cursor: pointer; clip-path: var(--notch);
+  filter: drop-shadow(3px 3px 0 var(--shade-color));
+  color: var(--text); background: var(--surface);
+}
+.btn--primary   { background: var(--fill);    color: var(--on-fill); }
+.btn--secondary { background: var(--inset);   color: var(--text); }
+.btn--ghost     { background: var(--surface); color: var(--dim); font-weight: 500; }
+.btn--danger    { background: var(--err);     color: var(--on-err); }
+.btn:active { transform: translate(3px, 3px); filter: none; }
+.btn:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; filter: none; transform: none; }
+.btn--sm { font-size: 10.5px; padding: 7px 10px; clip-path: var(--notch-s); }
+
+/* ── chips: state, not decoration ───────────────────────────────────────── */
+.chip {
+  display: inline-block; font-family: var(--font-mono); font-size: 9.5px;
+  letter-spacing: 0.09em; padding: 4px 6px; clip-path: var(--notch-s);
+}
+.chip--accent { background: var(--wash);    color: var(--link); }
+.chip--ok     { background: var(--surface); color: var(--ok);   box-shadow: inset 0 0 0 2px var(--ok); }
+.chip--warn   { background: var(--surface); color: var(--warn); box-shadow: inset 0 0 0 2px var(--warn); }
+.chip--err    { background: var(--surface); color: var(--err);  box-shadow: inset 0 0 0 2px var(--err); }
+
+/* ── tables ─────────────────────────────────────────────────────────────── */
+.table-wrap {                        /* the only element allowed to scroll sideways */
+  overflow-x: auto; background: var(--border-strong); padding: 2px;
+  clip-path: var(--notch);
+  filter: drop-shadow(var(--shade) var(--shade) 0 var(--shade-color));
+}
+table { width: 100%; border-collapse: collapse; background: var(--surface);
+  font-family: var(--font-mono); font-size: var(--t-xs); font-variant-numeric: tabular-nums; }
+th { text-align: left; font-weight: 500; font-size: 9.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--dim);
+  padding: 9px 11px; background: var(--inset); border-bottom: 1px solid var(--border); }
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.n { color: var(--dim); }
+
+/* ── nav / masthead ─────────────────────────────────────────────────────── */
+.nav { display: flex; align-items: center; gap: var(--s6); flex-wrap: wrap;
+  padding-block: var(--s6); border-bottom: 1px solid var(--border); }
+.logo { font-family: var(--font-mono); font-weight: 700; font-size: var(--t-base); letter-spacing: -0.02em; }
+.logo i { color: var(--link); font-style: normal; }   /* the slash is the mark */
+.nav-links { display: flex; gap: var(--s5); margin-inline-start: auto;
+  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.04em; color: var(--dim); }
+.nav-links [aria-current] { color: var(--text); font-weight: 500;
+  box-shadow: 0 6px 0 -5px var(--fill); }
+
+/* ── forms ──────────────────────────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: var(--s2); }
+input[type="text"], input[type="email"], input[type="search"], textarea, select {
+  font-family: var(--font-mono); font-size: var(--t-xs); padding: 9px 11px;
+  background: var(--surface); color: var(--text); border: 0;
+  box-shadow: inset 0 0 0 2px var(--border-control); clip-path: var(--notch);
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 0; box-shadow: inset 0 0 0 2px var(--link);
+}
+
+/* ── pixel imagery ──────────────────────────────────────────────────────── */
+canvas, .pixel { display: block; image-rendering: pixelated; }
+.sprite { width: 48px; height: 48px; flex: none; }
+.strip  { width: 100%; height: 8px; }     /* state-keyed dither strip */
+.scene canvas { width: 100%; height: auto; }
+
+/* ── section rule ───────────────────────────────────────────────────────── */
+.sech { display: flex; align-items: baseline; gap: var(--s4); margin-bottom: var(--s5); }
+.sech .rule { flex: 1; height: 1px; background: var(--border); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

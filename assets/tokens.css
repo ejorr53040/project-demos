@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ejorr/systems — brand tokens
+   THE single source of truth. components.css, the artifact head block and
+   every other target derive from this file; none of them redefine a value.
+
+   Palette: Glacier (light-first, snow + very light blue, muted orange accent)
+   Direction: technical/terminal + smooth pixel art (Bevel Grid)
+
+   Theme contract — all three viewer states are covered, in this order:
+     1. bare :root                      → complete LIGHT palette (the canonical look)
+     2. @media (prefers-color-scheme:dark) guarded :root:not([data-theme="light"])
+     3. :root[data-theme="dark"]        → so an explicit toggle wins both ways
+   Never give a colour its only definition inside 2 or 3.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── surfaces ─────────────────────────────────────────────────────────── */
+  --bg:            #EEF5FB;   /* page ground — snow with a blue cast        */
+  --surface:       #FFFFFF;   /* raised: cards, table body, popovers        */
+  --inset:         #DEEAF4;   /* recessed: table heads, code, secondary keys */
+
+  /* ── lines ────────────────────────────────────────────────────────────── */
+  --border:        #C3D8E8;   /* hairline, the default separator            */
+  --border-strong: #9CB8CE;   /* bevel frames and emphasised edges.
+                                 DECORATIVE only: 2.07:1, below the 3:1 UI
+                                 floor, so it must never be a control edge.  */
+  --border-control: var(--b5);/* form-control boundaries. A control's edge is
+                                 how you identify the control, so it has to
+                                 clear 3:1 -- 3.36:1 light, 5.12:1 dark.     */
+
+  /* ── text ─────────────────────────────────────────────────────────────── */
+  --text:          #0F1A22;   /* near-black, never pure #000                */
+  --dim:           #52687A;   /* captions, secondary copy, table numerals   */
+
+  /* ── accent: TWO TIERS, and they are not interchangeable ──────────────── */
+  --fill:          #D0753C;   /* grounds, borders, bars. 3.03:1 on --bg --
+                                 sits right at the 3:1 non-text floor, so it
+                                 is a UI colour and NEVER text. Nudged from
+                                 #D2763D, which measured 2.98:1 and failed.  */
+  --link:          #A8551F;   /* the readable orange: links, inline accent
+                                 text, accent labels. 5.37:1 on --surface.  */
+  --wash:          #F9EBE0;   /* tinted accent ground for chips/callouts.
+                                 Lightened from #F7E6D9 so --link on it
+                                 reaches 4.51:1 instead of 4.34:1.           */
+  --on-fill:       #0F1A22;   /* label ON --fill. Near-black, NOT white:
+                                 white on --fill is 3.05:1 and fails AA.    */
+
+  /* ── semantic (separate from the accent; these are not decoration) ────── */
+  --ok:            #3F7A63;
+  --warn:          #907225;   /* darkened from #A8842B, which was 3.50:1 */
+  --err:           #B8443E;
+  --on-err:        #FFFFFF;
+
+  /* ── ramps: ordered steps for pixel shading and Bayer dithering ───────────
+     Direction is PERCEPTUAL, not numeric: --b1 is always the step furthest
+     from the text colour and --b7 the closest, so a ramp reads the same way
+     in both themes. They invert in the dark blocks below. Do not "fix" that. */
+  --b1: #FFFFFF; --b2: #DEEAF4; --b3: #C3D8E8; --b4: #9CB8CE;
+  --b5: #6E90AC; --b6: #45647F; --b7: #1E3B52;
+  --o1: #F7E6D9; --o2: #EFC9A9; --o3: #E3A575; --o4: #D2763D;
+  --o5: #B25F2C; --o6: #8E491F;
+  --g1: #EAF4EF; --g2: #C6E3D6; --g3: #96C7B2; --g4: #65A489; --g5: #3F7A63;
+
+  /* ── pixel geometry: the Bevel Grid grammar ───────────────────────────── */
+  --step:  4px;               /* corner step. 3px for small objects.        */
+  --shade: 4px;               /* hard shade offset. Always a whole pixel.   */
+  --shade-color: var(--b4);
+
+  /* Stepped corners. clip-path also clips the border, so a bevelled surface
+     that needs a frame uses the two-layer .bev / .bev-in pattern in
+     components.css rather than a border property. */
+  --notch: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px),
+    calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 4px),
+    0 calc(100% - 4px), 0 4px, 4px 4px);
+  --notch-s: polygon(3px 0, calc(100% - 3px) 0, calc(100% - 3px) 3px, 100% 3px,
+    100% calc(100% - 3px), calc(100% - 3px) calc(100% - 3px),
+    calc(100% - 3px) 100%, 3px 100%, 3px calc(100% - 3px),
+    0 calc(100% - 3px), 0 3px, 3px 3px);
+
+  /* ── type ─────────────────────────────────────────────────────────────── */
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --t-label: 10.5px;  /* uppercase eyebrows, 0.14em tracking  */
+  --t-xs:    11.5px;  /* table cells, chips, metadata         */
+  --t-sm:    13.5px;  /* secondary body                       */
+  --t-base:  15px;    /* body                                 */
+  --t-md:    17px;
+  --t-lg:    22px;
+  --t-xl:    clamp(30px, 6vw, 46px);
+
+  /* ── spacing: 4px base, 8px rhythm for bevelled surfaces ──────────────── */
+  --s1: 2px;  --s2: 4px;  --s3: 8px;  --s4: 12px; --s5: 16px;
+  --s6: 24px; --s7: 32px; --s8: 48px; --s9: 64px;
+
+  --measure: 65ch;     /* running-text width ceiling */
+  --gutter: 20px;      /* page side gutter, never below 16px */
+  --wrap: 1080px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C141C; --surface: #121C26; --inset: #17232F;
+    --border: #253647; --border-strong: #3A5266;
+    --text: #DFEAF3; --dim: #8499AA;
+    --fill: #E38B4E; --link: #F2A873; --wash: #2B1E15; --on-fill: #0C141C;
+    --ok: #5FAA8C; --warn: #CFAA55; --err: #E2726B; --on-err: #0C141C;
+    --b1: #1E3B52; --b2: #17232F; --b3: #253647; --b4: #3A5266;
+    --b5: #6E90AC; --b6: #9CB8CE; --b7: #DEEAF4;
+    --o1: #2B1E15; --o2: #5A3A1E; --o3: #8E491F; --o4: #D2763D;
+    --o5: #E3A575; --o6: #EFC9A9;
+    --g1: #16241E; --g2: #1E3A2E; --g3: #2F5A48; --g4: #448069; --g5: #5FAA8C;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0C141C; --surface: #121C26; --inset: #17232F;
+  --border: #253647; --border-strong: #3A5266;
+  --text: #DFEAF3; --dim: #8499AA;
+  --fill: #E38B4E; --link: #F2A873; --wash: #2B1E15; --on-fill: #0C141C;
+  --ok: #5FAA8C; --warn: #CFAA55; --err: #E2726B; --on-err: #0C141C;
+  --b1: #1E3B52; --b2: #17232F; --b3: #253647; --b4: #3A5266;
+  --b5: #6E90AC; --b6: #9CB8CE; --b7: #DEEAF4;
+  --o1: #2B1E15; --o2: #5A3A1E; --o3: #8E491F; --o4: #D2763D;
+  --o5: #E3A575; --o6: #EFC9A9;
+  --g1: #16241E; --g2: #1E3A2E; --g3: #2F5A48; --g4: #448069; --g5: #5FAA8C;
+}
