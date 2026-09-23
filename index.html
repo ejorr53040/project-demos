@@ -19,10 +19,6 @@
 
   /* ── hero ──────────────────────────────────────────────────────────────── */
   .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
-    gap: var(--s7);
-    align-items: center;
     padding-block: var(--s8) var(--s7);
   }
   .hero h1 { margin-bottom: var(--s5); }
@@ -68,7 +64,7 @@
   footer .spacer { margin-inline-start: auto; }
 
   @media (max-width: 760px) {
-    .hero { grid-template-columns: 1fr; gap: var(--s6); padding-block: var(--s7) var(--s6); }
+    .hero { padding-block: var(--s7) var(--s6); }
   }
 </style>
 </head>
@@ -97,12 +93,6 @@
             <dd><a href="https://github.com/ejorr53040" target="_blank" rel="noopener">github.com/ejorr53040</a></dd>
           </div>
         </dl>
-      </div>
-
-      <div class="bev scene">
-        <div class="bev-in flush">
-          <canvas data-scene aria-hidden="true"></canvas>
-        </div>
       </div>
     </header>
 
