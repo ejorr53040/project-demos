@@ -3,182 +3,229 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EJ Orr — project demos</title>
-<meta name="description" content="Selected projects by EJ Orr, computer science at the University of Vermont.">
+<title>EJ Orr — Rust systems projects</title>
+<meta name="description" content="EJ Orr, Computer Science at the University of Vermont, looking for a Summer 2027 software engineering internship. Projects: a self-hosted microVM cloud, a code-intelligence index, and hand-tracked 3D interaction, all in Rust.">
+<link rel="canonical" href="https://ejorr53040.github.io/project-demos/">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F9F8F8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0C14" media="(prefers-color-scheme: dark)">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ejorr53040.github.io/project-demos/">
+<meta property="og:title" content="EJ Orr — Rust systems projects">
+<meta property="og:description" content="Computer Science at UVM. A self-hosted microVM cloud, a code-intelligence index, and hand-tracked 3D interaction, all in Rust.">
+<meta property="og:image" content="https://ejorr53040.github.io/project-demos/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="EJ Orr: Rust systems projects, CS at UVM">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="assets/icons/site.webmanifest">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&family=Fragment+Mono&display=swap">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/components.css">
 <style>
   /* Page-specific only. Every value is a token; nothing new is defined here. */
+  /* Set directly, not through --sky-img: Chrome resolves a url() inside a custom
+     property against the stylesheet that uses it (assets/), so the path breaks. */
+  .sky { background: url("assets/sky-light.png") center top / cover no-repeat, var(--bg); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sky { background-image: url("assets/sky-dark.png"); } }
+  :root[data-theme="dark"] .sky { background-image: url("assets/sky-dark.png"); }
 
-  .wrap { max-width: 920px; }
+  html, body { overflow-x: clip; }
+  .wrap { padding-block: var(--s5) var(--s8); }
+
+  .skip { position: absolute; left: var(--s4); top: -100px; z-index: 2; }
+  .skip:focus-visible { top: var(--s4); }
   .nav-links { align-items: center; }
-  .sech h2 { margin: 0; }
+  @media (max-width: 480px) { .nav { border-radius: var(--r-card); } }
 
   /* ── hero ──────────────────────────────────────────────────────────────── */
   .hero {
-    padding-block: var(--s8) var(--s7);
-    display: grid; gap: var(--s6);
-    grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
-    align-items: center;
+    display: grid; gap: var(--s5); align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
   }
-  .hero h1 { margin-bottom: var(--s5); }
+  @media (max-width: 800px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+  .intro { display: flex; flex-direction: column; gap: var(--s4); }
+  .actions { display: flex; gap: var(--s4); flex-wrap: wrap; align-items: center; }
+  .hero .tile img { display: block; width: 100%; height: auto; }
 
-  /* The scene stacks under the name on a phone; it never sets a min-width,
-     so the hero collapses to one column instead of scrolling sideways. */
-  @media (max-width: 760px) { .hero { grid-template-columns: minmax(0, 1fr); } }
-  .hero-art { margin: 0; }
-  .hero-art canvas { width: 100%; height: auto; }
-
-  /* the one terminal nod: the prompt keeps its shape, in brand colour */
-  .prompt { margin: 0 0 var(--s4); }
-  .prompt .u,
-  .prompt .p { color: var(--link); }
-  .cursor {
-    display: inline-block; width: 7px; height: 13px;
-    background: var(--fill); margin-left: 5px; vertical-align: -2px;
-    animation: blink 1.1s steps(2, start) infinite;
-  }
-  @keyframes blink { to { visibility: hidden; } }
-
-  .fields { display: grid; gap: var(--s3); margin: 0; }
-  .fields > div { display: flex; align-items: baseline; gap: var(--s4); flex-wrap: wrap; }
-  .fields dt { flex: none; width: 62px; }
-  .fields dd { margin: 0; font-size: var(--t-sm); }
-
-  /* ── project cards ─────────────────────────────────────────────────────── */
-  .card { display: flex; flex-direction: column; }
-  .card > .bev-in { flex: 1; display: flex; flex-direction: column; padding: var(--s5); }
-  .card-top { display: flex; gap: var(--s4); align-items: flex-start; margin-bottom: var(--s4); }
-  .card-name {
-    margin: 0; font-family: var(--font-mono); font-weight: 700;
-    font-size: var(--t-md); letter-spacing: -0.015em; line-height: 1.2;
-  }
-  .card-name a { text-decoration: none; }
-  .card-name a:hover { text-decoration: underline; }
-  .card-desc { margin: 0 0 var(--s5); font-size: var(--t-sm); }
+  /* ── projects ──────────────────────────────────────────────────────────── */
+  .sech { display: flex; gap: var(--s4); align-items: baseline; }
+  .card { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+  .card-top { display: flex; gap: var(--s3); align-items: center; }
+  .card-top .icon { color: var(--text); }
+  .facts { margin: 0; padding-left: var(--s5); display: grid; gap: var(--s2); font-size: var(--t-sm); }
   .card-meta {
-    margin: auto 0 0; display: flex; gap: var(--s4); flex-wrap: wrap;
+    margin-top: auto; display: flex; gap: var(--s3); flex-wrap: wrap; align-items: center;
     border-top: 1px solid var(--border); padding-top: var(--s3);
   }
+  .card-meta .repo { margin-inline-start: auto; }
 
-  /* ── footer ────────────────────────────────────────────────────────────── */
-  footer {
-    margin-top: var(--s8); padding-block: var(--s6) var(--s9);
-    border-top: 1px solid var(--border);
-    display: flex; gap: var(--s5); flex-wrap: wrap; align-items: baseline;
-  }
-  footer .spacer { margin-inline-start: auto; }
+  .featured { display: grid; gap: var(--s5); grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  @media (max-width: 860px) { .featured { grid-template-columns: minmax(0, 1fr); } }
+  .featured .copy { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+  .demo { margin: 0; display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
+  .demo video { display: block; width: 100%; height: auto; border-radius: var(--r-card); background: var(--tile); }
+  .demo figcaption { display: flex; gap: var(--s4); align-items: center; justify-content: space-between; }
 
-  @media (max-width: 760px) {
-    .hero { padding-block: var(--s7) var(--s6); }
-  }
+  .pair { display: grid; gap: var(--s5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 760px) { .pair { grid-template-columns: minmax(0, 1fr); } }
+
+  /* ── contact / footer ──────────────────────────────────────────────────── */
+  .contact { display: flex; gap: var(--s5); flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .contact > div:first-child { display: flex; flex-direction: column; gap: var(--s2); }
+  footer { margin-top: var(--s6); display: flex; gap: var(--s5); flex-wrap: wrap; padding-inline: clamp(var(--s5), 4vw, var(--s8)); }
 </style>
 </head>
 <body>
+  <a class="skip btn btn--sm" href="#projects">Skip to projects</a>
   <div class="wrap">
 
-    <nav class="nav">
-      <span class="logo">ejorr<i>/</i>project-demos</span>
-      <span class="nav-links">
-        <a href="https://github.com/ejorr53040" target="_blank" rel="noopener">github</a>
-        <button id="theme" class="btn btn--sm btn--ghost" type="button" aria-pressed="false">dark</button>
-      </span>
-    </nav>
+    <header class="sky">
+      <nav class="nav" aria-label="Primary">
+        <a class="logo" href="./" translate="no"><svg aria-hidden="true"><use href="assets/blueprint.svg#mark"/></svg>ejorr</a>
+        <span class="nav-links">
+          <a href="assets/EJ_Orr_Resume.pdf">resume</a>
+          <a href="https://www.linkedin.com/in/ethan-orr" rel="noopener">linkedin</a>
+          <a href="https://github.com/ejorr53040" rel="noopener">github</a>
+          <button id="theme" class="btn btn--sm" type="button" aria-pressed="false">dark</button>
+        </span>
+      </nav>
 
-    <header class="hero">
-      <div>
-        <p class="meta prompt"><span class="u">ej</span>@uvm:<span class="p">~</span>$ whoami<span class="cursor"></span></p>
-        <h1>EJ Orr</h1>
-        <dl class="fields">
-          <div>
-            <dt class="label">study</dt>
-            <dd>Computer Science, University of Vermont</dd>
+      <div class="hero">
+        <div class="glass intro">
+          <p class="label">CS at UVM · Summer 2027 internship</p>
+          <h1 translate="no">EJ Orr</h1>
+          <p class="lead">Computer Science at the University of Vermont, looking for a
+            Software Engineering internship for Summer&nbsp;2027. I build systems
+            software in Rust: a microVM cloud, a code-intelligence index, and
+            hand-tracked 3D interaction.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="assets/EJ_Orr_Resume.pdf">Download Resume (PDF)</a>
+            <a class="btn btn--link" href="mailto:ejorr@uvm.edu">Email ejorr@uvm.edu</a>
           </div>
-          <div>
-            <dt class="label">github</dt>
-            <dd><a href="https://github.com/ejorr53040" target="_blank" rel="noopener">github.com/ejorr53040</a></dd>
-          </div>
-        </dl>
-      </div>
-
-      <figure class="hero-art bev">
-        <div class="bev-in flush">
-          <canvas data-scene="ski-lift" role="img"
-                  aria-label="Pixel-art ski mountain with a groomed run and a chairlift"></canvas>
         </div>
-      </figure>
+
+        <figure class="tile">
+          <img src="assets/hero.svg" width="800" height="600"
+               alt="Blueprint drawing of a 1U server, the Node that cirrocumulus runs on">
+        </figure>
+      </div>
     </header>
 
-    <section>
+    <main id="projects" class="sky">
       <div class="sech">
-        <h2 class="label">projects</h2>
-        <span class="rule"></span>
-        <span class="meta num">3</span>
+        <h2>Projects</h2>
+        <span class="label num">3</span>
       </div>
 
-      <div class="grid">
-
-        <article class="bev card">
-          <div class="bev-in">
-            <div class="card-top">
-              <canvas class="sprite" data-sprite="clip" data-scale="4" aria-hidden="true"></canvas>
-              <div>
-                <p class="label">web app</p>
-                <h3 class="card-name"><a href="https://github.com/VERSO-UVM/UVM-Career-Quiz" target="_blank" rel="noopener">UVM-Career-Quiz</a></h3>
-              </div>
+      <article class="glass featured">
+        <div class="copy">
+          <div class="card-top">
+            <svg class="icon" aria-hidden="true"><use href="assets/blueprint.svg#i-cloud"/></svg>
+            <div>
+              <p class="label">self-hosted cloud</p>
+              <h3 translate="no">cirrocumulus</h3>
             </div>
-            <p class="card-desc">An interactive career-interest quiz built for UVM students, matching answers to career paths and campus resources worth exploring.</p>
-            <p class="card-meta meta"><span>python/HTML/CSS/JS/SQLite</span><span class="dim">VERSO</span></p>
           </div>
+          <p>A secure mini cloud you run yourself. Every workload gets its own
+            Firecracker microVM, locked down with jailer, managed from the terminal.</p>
+          <ul class="facts">
+            <li><code>cirro run nginx:alpine</code> turns an OCI image into a jailed microVM, built without root</li>
+            <li><code>cirro top</code> is a live dashboard of every VM's CPU, memory, disk and network</li>
+            <li>Idle VMs park to disk and free their RAM, then wake in 54&nbsp;ms p99 (measured in the README)</li>
+            <li>An HTTP(S) edge routes hostnames to Apps, waking them on request</li>
+          </ul>
+          <p class="card-meta meta">
+            <span translate="no">Rust · Firecracker · jailer</span>
+            <span class="chip chip--warn">early: one Node today</span>
+            <a class="repo" href="https://github.com/ejorr53040/cirrocumulus" rel="noopener">View on GitHub</a>
+          </p>
+        </div>
+        <figure class="demo">
+          <video id="demo" muted loop playsinline preload="metadata" width="1300" height="760"
+                 poster="assets/demo/cirro-top.png"
+                 aria-label="Recording: cirro run starts two VMs, then cirro top shows their live CPU, memory and network">
+            <source src="assets/demo/cirro-top.mp4" type="video/mp4">
+          </video>
+          <figcaption class="meta">
+            <span><code translate="no">cirro top</code>, recorded on a real Node</span>
+            <button id="demo-toggle" class="btn btn--sm" type="button" hidden>Pause</button>
+          </figcaption>
+        </figure>
+      </article>
+
+      <div class="pair">
+        <article class="glass card">
+          <div class="card-top">
+            <svg class="icon" aria-hidden="true"><use href="assets/blueprint.svg#i-database"/></svg>
+            <div>
+              <p class="label">code intelligence</p>
+              <h3 translate="no">strata</h3>
+            </div>
+          </div>
+          <p>Clean-room, compiler-backed code intelligence: a tree-sitter index
+            that answers who-defines, who-calls and what-breaks questions for humans and agents.</p>
+          <ul class="facts">
+            <li>On its own source, it finds 545 of 545 definitions and 1,028 of 1,028 call sites
+              that rust-analyzer finds (scored 2026-10-19)</li>
+            <li>Indexes Python and Rust today</li>
+          </ul>
+          <p class="card-meta meta">
+            <span translate="no">Rust · tree-sitter</span>
+            <a class="repo" href="https://github.com/ejorr53040/strata" rel="noopener">View on GitHub</a>
+          </p>
         </article>
 
-        <article class="bev card">
-          <div class="bev-in">
-            <div class="card-top">
-              <canvas class="sprite" data-sprite="pin" data-scale="4" aria-hidden="true"></canvas>
-              <div>
-                <p class="label">accessibility</p>
-                <h3 class="card-name"><a href="https://github.com/ejorr53040/CATMAP" target="_blank" rel="noopener">CATMAP</a></h3>
-              </div>
+        <article class="glass card">
+          <div class="card-top">
+            <svg class="icon" aria-hidden="true"><use href="assets/blueprint.svg#i-chip"/></svg>
+            <div>
+              <p class="label">3d interaction</p>
+              <h3 translate="no">terrain</h3>
             </div>
-            <p class="card-desc">An accessibility-focused smart maps app for the UVM campus, helping students navigate routes with mobility, sensory, or other access needs in mind.</p>
-            <p class="card-meta meta"><span>Java</span><span class="dim">ejorr53040</span></p>
           </div>
+          <p>Move 3D objects on screen with your real hands, using MediaPipe hand
+            models run through ONNX.</p>
+          <ul class="facts">
+            <li>Plays recorded hand frames today; live webcam tracking is next</li>
+          </ul>
+          <p class="card-meta meta">
+            <span translate="no">Rust · Bevy · ONNX</span>
+            <a class="repo" href="https://github.com/ejorr53040/terrain" rel="noopener">View on GitHub</a>
+          </p>
         </article>
+      </div>
+    </main>
 
-        <article class="bev card">
-          <div class="bev-in">
-            <div class="card-top">
-              <canvas class="sprite" data-sprite="cube" data-scale="4" aria-hidden="true"></canvas>
-              <div>
-                <p class="label">graphics</p>
-                <h3 class="card-name"><a href="https://github.com/farizmo/3d-gaming" target="_blank" rel="noopener">3d-gaming</a></h3>
-              </div>
-            </div>
-            <p class="card-desc">A 3D game project exploring real-time rendering and interactive gameplay mechanics.</p>
-            <p class="card-meta meta"><span>C++/OpenGL</span><span class="dim">farizmo</span></p>
-          </div>
-        </article>
-
+    <section class="sky" aria-labelledby="contact-h">
+      <div class="glass contact">
+        <div>
+          <h2 id="contact-h" class="h3">Contact</h2>
+          <p>Hiring for Summer&nbsp;2027? Email is fastest.</p>
+        </div>
+        <div class="actions">
+          <a class="btn btn--primary" href="mailto:ejorr@uvm.edu">Email ejorr@uvm.edu</a>
+          <a class="btn btn--link" href="assets/EJ_Orr_Resume.pdf">Resume (PDF)</a>
+        </div>
       </div>
     </section>
 
-    <footer>
-      <span class="meta">more on <a href="https://github.com/ejorr53040" target="_blank" rel="noopener">github.com/ejorr53040</a></span>
-      <span class="meta dim spacer">More cool stuff coming soon!</span>
+    <footer class="meta">
+      <a href="https://github.com/ejorr53040" rel="noopener">github.com/ejorr53040</a>
+      <a href="https://www.linkedin.com/in/ethan-orr" rel="noopener">linkedin.com/in/ethan-orr</a>
     </footer>
 
   </div>
 
-<script src="assets/pixel.js"></script>
 <script>
-  /* The repaint hook goes on before anything else stamps data-theme, so a flip
-     never leaves a canvas holding the other theme's palette. */
-  onThemeChange(paintAll);
-
   (function () {
     var root = document.documentElement, btn = document.getElementById("theme");
     var saved = null;
@@ -192,6 +239,7 @@
     }
     function sync() {
       var d = isDark();
+      root.style.colorScheme = d ? "dark" : "light";
       btn.textContent = d ? "light" : "dark";
       btn.setAttribute("aria-pressed", String(d));
       btn.setAttribute("aria-label", d ? "Switch to light theme" : "Switch to dark theme");
@@ -202,11 +250,23 @@
       try { localStorage.setItem("theme", next); } catch (e) { /* ditto */ }
       sync();
     });
-    onThemeChange(sync);
+    if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", sync);
     sync();
   })();
 
-  paintAll();
+  /* The demo loops for 30s, so it plays only without reduced motion and always
+     has a pause control; under reduced motion the poster frame is the demo. */
+  (function () {
+    var v = document.getElementById("demo"), t = document.getElementById("demo-toggle");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    t.hidden = false;
+    function label() { t.textContent = v.paused ? "Play" : "Pause"; }
+    t.addEventListener("click", function () { v.paused ? v.play() : v.pause(); });
+    v.addEventListener("play", label);
+    v.addEventListener("pause", label);
+    var p = v.play();
+    if (p && p.catch) p.catch(label);
+  })();
 </script>
 </body>
 </html>

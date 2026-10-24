@@ -1,0 +1,6 @@
+# GitHub Pages builds this repo with Jekyll. Keep design notes and tooling off the site.
+exclude:
+  - PRODUCT.md
+  - DESIGN.md
+  - .claude
+  - .impeccable
