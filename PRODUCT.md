@@ -21,30 +21,33 @@ landing.
 
 ## Positioning
 
-The projects are substantial solo systems work in Rust, not coursework
-clones: a self-hosted microVM cloud, a code-intelligence index, and a
-hand-tracking 3D interaction app. The page shows the real tools running.
+Real software, not coursework clones: a self-hosted microVM cloud, the UVM
+Career Quiz (team project, VERSO-UVM), an architecture board, and a
+hand-tracking interaction app. Each project is its name, one demo and a GitHub
+button; no descriptions.
 
 ## Capabilities and Constraints
 
 - Static HTML/CSS/JS on GitHub Pages, served from `main` at `/`. No build step.
 - Visitor actions: open each project's public GitHub repo; email
-  ejorr@uvm.edu; open LinkedIn (linkedin.com/in/ethan-orr); download the
+  ejorr@uvm.edu; open LinkedIn
+  (linkedin.com/in/ethan-orr-05856435b); download the
   resume PDF.
-- Featured projects: cirrocumulus, strata, terrain (all public). bedrock and
+- Featured projects: cirrocumulus, UVM Career Quiz, chisel, terrain. geode and
   devdeck are private and are not shown.
 
 ## Brand Commitments
 
-The ejorr clear-glass identity (`~/.claude/skills/brand`): its tokens,
+The ejorr identity on solid black (`~/.claude/skills/brand`): its tokens,
 components and blueprint imagery are binding. See DESIGN.md.
 
 ## Evidence on Hand
 
 - Project descriptions: each repo's GitHub description and README intro.
 - cirrocumulus: `docs/cirro-top.gif`, a recording of the real terminal dashboard.
-- strata: `docs/metrics/chart.svg`, generated from its own metrics history.
-- terrain: no screenshot or recording yet; do not fabricate one.
+- UVM Career Quiz: `assets/demo/quiz-builder.mp4`, recorded from a local run of the real app.
+- chisel: `assets/demo/chisel-board.webp`, chisel's own board (`chisel.chisel.json`).
+- terrain: no recording yet; the page shows a pipeline diagram until one exists.
 - Resume: published as-is by Ethan's choice.
 - No testimonials, user counts, stars or benchmarks to cite. Do not invent any.
 
