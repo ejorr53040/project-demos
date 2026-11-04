@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EJ Orr — Rust systems projects</title>
-<meta name="description" content="EJ Orr, Computer Science at the University of Vermont, looking for a Summer 2027 software engineering internship. Projects: a self-hosted microVM cloud, a code-intelligence index, and hand-tracked 3D interaction, all in Rust.">
+<title>EJ Orr — Projects</title>
+<meta name="description" content="EJ Orr, Computer Science at the University of Vermont, looking for a Summer 2027 software engineering internship. Project demos: cirrocumulus, UVM Career Quiz, chisel and terrain.">
 <link rel="canonical" href="https://ejorr53040.github.io/project-demos/">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F9F8F8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0A0C14" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ejorr53040.github.io/project-demos/">
-<meta property="og:title" content="EJ Orr — Rust systems projects">
-<meta property="og:description" content="Computer Science at UVM. A self-hosted microVM cloud, a code-intelligence index, and hand-tracked 3D interaction, all in Rust.">
+<meta property="og:title" content="EJ Orr — Projects">
+<meta property="og:description" content="CS at UVM. Demos of a self-hosted microVM cloud, the UVM Career Quiz, an architecture board and hand-tracked interaction.">
 <meta property="og:image" content="https://ejorr53040.github.io/project-demos/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="EJ Orr: Rust systems projects, CS at UVM">
+<meta property="og:image:alt" content="EJ Orr: projects, CS at UVM">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
@@ -31,241 +30,199 @@
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/components.css">
 <style>
-  /* Page-specific only. Every value is a token; nothing new is defined here. */
-  /* Set directly, not through --sky-img: Chrome resolves a url() inside a custom
-     property against the stylesheet that uses it (assets/), so the path breaks. */
-  .sky { background: url("assets/sky-light.png") center top / cover no-repeat, var(--bg); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sky { background-image: url("assets/sky-dark.png"); } }
-  :root[data-theme="dark"] .sky { background-image: url("assets/sky-dark.png"); }
+  /* Solid black page: dark brand tokens with the ground pushed to pure black.
+     Same specificity as tokens.css's dark rules, later in source, so it wins. */
+  :root[data-theme="dark"] {
+    --bg: #000; --surface: #000; --text: #FFF; --border: #1C2233;
+    --glass: transparent; --glass-edge: #2C3242;
+  }
 
   html, body { overflow-x: clip; }
-  .wrap { padding-block: var(--s5) var(--s8); }
+  .wrap { padding-block: var(--s5) var(--s8); display: flex; flex-direction: column; gap: var(--s9); }
 
   .skip { position: absolute; left: var(--s4); top: -100px; z-index: 2; }
   .skip:focus-visible { top: var(--s4); }
+  .nav { background: none; border: 0; padding-inline: 0; }
   .nav-links { align-items: center; }
-  @media (max-width: 480px) { .nav { border-radius: var(--r-card); } }
+  .nav-links a:hover { color: var(--link); }
 
-  /* ── hero ──────────────────────────────────────────────────────────────── */
-  .hero {
-    display: grid; gap: var(--s5); align-items: center;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
-  }
-  @media (max-width: 800px) { .hero { grid-template-columns: minmax(0, 1fr); } }
-  .intro { display: flex; flex-direction: column; gap: var(--s4); }
+  .hero { display: flex; flex-direction: column; gap: var(--s4); padding-top: var(--s8); }
   .actions { display: flex; gap: var(--s4); flex-wrap: wrap; align-items: center; }
-  .hero .tile img { display: block; width: 100%; height: auto; }
+  .label { color: var(--link); }
 
-  /* ── projects ──────────────────────────────────────────────────────────── */
-  .sech { display: flex; gap: var(--s4); align-items: baseline; }
-  .card { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
-  .card-top { display: flex; gap: var(--s3); align-items: center; }
-  .card-top .icon { color: var(--text); }
-  .facts { margin: 0; padding-left: var(--s5); display: grid; gap: var(--s2); font-size: var(--t-sm); }
-  .card-meta {
-    margin-top: auto; display: flex; gap: var(--s3); flex-wrap: wrap; align-items: center;
-    border-top: 1px solid var(--border); padding-top: var(--s3);
+  /* ── projects: name, demo, repo button ─────────────────────────────────── */
+  #projects { display: flex; flex-direction: column; gap: var(--s9); }
+  #projects > .label { margin: 0 0 calc(var(--s6) - var(--s9)); }
+  .project { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
+  .project-head { display: flex; gap: var(--s4); align-items: center; flex-wrap: wrap; }
+  .project-head > div { display: flex; flex-direction: column; gap: var(--s1); }
+  .project-head h2, .project-head p { margin: 0; }
+  .project-head .btn { margin-inline-start: auto; }
+
+  /* Every demo sits in the same 16:10 frame with one blue hairline. */
+  .frame {
+    position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden;
+    border: 1px solid var(--fill); border-radius: var(--r-card); background: #000;
   }
-  .card-meta .repo { margin-inline-start: auto; }
+  .frame > video, .frame > img, .frame > svg {
+    display: block; width: 100%; height: 100%; object-fit: contain;
+  }
+  .frame .toggle { position: absolute; right: var(--s4); bottom: var(--s4); background: rgba(0, 0, 0, 0.7); }
 
-  .featured { display: grid; gap: var(--s5); grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
-  @media (max-width: 860px) { .featured { grid-template-columns: minmax(0, 1fr); } }
-  .featured .copy { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
-  .demo { margin: 0; display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
-  .demo video { display: block; width: 100%; height: auto; border-radius: var(--r-card); background: var(--tile); }
-  .demo figcaption { display: flex; gap: var(--s4); align-items: center; justify-content: space-between; }
+  .diagram text { font-family: var(--font-mono); fill: var(--text); }
+  .diagram .dim { fill: var(--dim); }
+  .diagram .box { fill: #000; stroke: var(--fill); stroke-width: 2; }
+  .diagram .hl { stroke: var(--link); stroke-width: 2.5; }
+  .diagram .wire { stroke: var(--fill); stroke-width: 2; fill: none; }
+  .diagram .head { fill: var(--fill); }
 
-  .pair { display: grid; gap: var(--s5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 760px) { .pair { grid-template-columns: minmax(0, 1fr); } }
-
-  /* ── contact / footer ──────────────────────────────────────────────────── */
-  .contact { display: flex; gap: var(--s5); flex-wrap: wrap; align-items: center; justify-content: space-between; }
-  .contact > div:first-child { display: flex; flex-direction: column; gap: var(--s2); }
-  footer { margin-top: var(--s6); display: flex; gap: var(--s5); flex-wrap: wrap; padding-inline: clamp(var(--s5), 4vw, var(--s8)); }
+  footer { display: flex; gap: var(--s5); flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: var(--s5); }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--link); }
 </style>
 </head>
 <body>
   <a class="skip btn btn--sm" href="#projects">Skip to projects</a>
   <div class="wrap">
 
-    <header class="sky">
+    <header>
       <nav class="nav" aria-label="Primary">
         <a class="logo" href="./" translate="no"><svg aria-hidden="true"><use href="assets/blueprint.svg#mark"/></svg>ejorr</a>
         <span class="nav-links">
           <a href="assets/EJ_Orr_Resume.pdf">resume</a>
-          <a href="https://www.linkedin.com/in/ethan-orr" rel="noopener">linkedin</a>
+          <a href="https://www.linkedin.com/in/ethan-orr-05856435b/" rel="noopener">linkedin</a>
           <a href="https://github.com/ejorr53040" rel="noopener">github</a>
-          <button id="theme" class="btn btn--sm" type="button" aria-pressed="false">dark</button>
         </span>
       </nav>
 
       <div class="hero">
-        <div class="glass intro">
-          <p class="label">CS at UVM · Summer 2027 internship</p>
-          <h1 translate="no">EJ Orr</h1>
-          <p class="lead">Computer Science at the University of Vermont, looking for a
-            Software Engineering internship for Summer&nbsp;2027. I build systems
-            software in Rust: a microVM cloud, a code-intelligence index, and
-            hand-tracked 3D interaction.</p>
-          <div class="actions">
-            <a class="btn btn--primary" href="assets/EJ_Orr_Resume.pdf">Download Resume (PDF)</a>
-            <a class="btn btn--link" href="mailto:ejorr@uvm.edu">Email ejorr@uvm.edu</a>
-          </div>
+        <p class="label">CS at UVM · Summer 2027 internship</p>
+        <h1 translate="no">EJ Orr</h1>
+        <div class="actions">
+          <a class="btn btn--primary" href="assets/EJ_Orr_Resume.pdf">Download Resume (PDF)</a>
+          <a class="btn btn--link" href="mailto:ejorr@uvm.edu">Email ejorr@uvm.edu</a>
         </div>
-
-        <figure class="tile">
-          <img src="assets/hero.svg" width="800" height="600"
-               alt="Blueprint drawing of a 1U server, the Node that cirrocumulus runs on">
-        </figure>
       </div>
     </header>
 
-    <main id="projects" class="sky">
-      <div class="sech">
-        <h2>Projects</h2>
-        <span class="label num">3</span>
-      </div>
+    <main id="projects">
+      <h2 class="label">Projects</h2>
 
-      <article class="glass featured">
-        <div class="copy">
-          <div class="card-top">
-            <svg class="icon" aria-hidden="true"><use href="assets/blueprint.svg#i-cloud"/></svg>
-            <div>
-              <p class="label">self-hosted cloud</p>
-              <h3 translate="no">cirrocumulus</h3>
-            </div>
-          </div>
-          <p>A secure mini cloud you run yourself. Every workload gets its own
-            Firecracker microVM, locked down with jailer, managed from the terminal.</p>
-          <ul class="facts">
-            <li><code>cirro run nginx:alpine</code> turns an OCI image into a jailed microVM, built without root</li>
-            <li><code>cirro top</code> is a live dashboard of every VM's CPU, memory, disk and network</li>
-            <li>Idle VMs park to disk and free their RAM, then wake in 54&nbsp;ms p99 (measured in the README)</li>
-            <li>An HTTP(S) edge routes hostnames to Apps, waking them on request</li>
-          </ul>
-          <p class="card-meta meta">
-            <span translate="no">Rust · Firecracker · jailer</span>
-            <span class="chip chip--warn">early: one Node today</span>
-            <a class="repo" href="https://github.com/ejorr53040/cirrocumulus" rel="noopener">View on GitHub</a>
-          </p>
+      <article class="project">
+        <div class="project-head">
+          <h2 translate="no">cirrocumulus</h2>
+          <a class="btn btn--primary btn--sm" href="https://github.com/ejorr53040/cirrocumulus" rel="noopener">GitHub</a>
         </div>
-        <figure class="demo">
-          <video id="demo" muted loop playsinline preload="metadata" width="1300" height="760"
+        <figure class="frame">
+          <video muted loop playsinline preload="metadata" width="1300" height="760"
                  poster="assets/demo/cirro-top.png"
-                 aria-label="Recording: cirro run starts two VMs, then cirro top shows their live CPU, memory and network">
+                 aria-label="Recording: cirro run starts two microVMs, then cirro top shows their live CPU, memory and network">
             <source src="assets/demo/cirro-top.mp4" type="video/mp4">
           </video>
-          <figcaption class="meta">
-            <span><code translate="no">cirro top</code>, recorded on a real Node</span>
-            <button id="demo-toggle" class="btn btn--sm" type="button" hidden>Pause</button>
-          </figcaption>
+          <button class="toggle btn btn--sm" type="button" hidden>Pause</button>
         </figure>
       </article>
 
-      <div class="pair">
-        <article class="glass card">
-          <div class="card-top">
-            <svg class="icon" aria-hidden="true"><use href="assets/blueprint.svg#i-database"/></svg>
-            <div>
-              <p class="label">code intelligence</p>
-              <h3 translate="no">strata</h3>
-            </div>
+      <article class="project">
+        <div class="project-head">
+          <div>
+            <h2>UVM Career Quiz</h2>
+            <p class="meta">contributor · VERSO-UVM</p>
           </div>
-          <p>Clean-room, compiler-backed code intelligence: a tree-sitter index
-            that answers who-defines, who-calls and what-breaks questions for humans and agents.</p>
-          <ul class="facts">
-            <li>On its own source, it finds 545 of 545 definitions and 1,028 of 1,028 call sites
-              that rust-analyzer finds (scored 2026-10-19)</li>
-            <li>Indexes Python and Rust today</li>
-          </ul>
-          <p class="card-meta meta">
-            <span translate="no">Rust · tree-sitter</span>
-            <a class="repo" href="https://github.com/ejorr53040/strata" rel="noopener">View on GitHub</a>
-          </p>
-        </article>
+          <a class="btn btn--primary btn--sm" href="https://github.com/VERSO-UVM/UVM-Career-Quiz" rel="noopener">GitHub</a>
+        </div>
+        <figure class="frame">
+          <video muted loop playsinline preload="metadata" width="1280" height="800"
+                 poster="assets/demo/quiz-builder.webp"
+                 aria-label="Recording: building a quiz with a category and a multiple-choice question, then answering it in preview">
+            <source src="assets/demo/quiz-builder.mp4" type="video/mp4">
+          </video>
+          <button class="toggle btn btn--sm" type="button" hidden>Pause</button>
+        </figure>
+      </article>
 
-        <article class="glass card">
-          <div class="card-top">
-            <svg class="icon" aria-hidden="true"><use href="assets/blueprint.svg#i-chip"/></svg>
-            <div>
-              <p class="label">3d interaction</p>
-              <h3 translate="no">terrain</h3>
-            </div>
-          </div>
-          <p>Move 3D objects on screen with your real hands, using MediaPipe hand
-            models run through ONNX.</p>
-          <ul class="facts">
-            <li>Plays recorded hand frames today; live webcam tracking is next</li>
-          </ul>
-          <p class="card-meta meta">
-            <span translate="no">Rust · Bevy · ONNX</span>
-            <a class="repo" href="https://github.com/ejorr53040/terrain" rel="noopener">View on GitHub</a>
-          </p>
-        </article>
-      </div>
+      <article class="project">
+        <div class="project-head">
+          <h2 translate="no">chisel</h2>
+          <a class="btn btn--primary btn--sm" href="https://github.com/ejorr53040/chisel" rel="noopener">GitHub</a>
+        </div>
+        <figure class="frame">
+          <img src="assets/demo/chisel-board.webp" width="1600" height="1000" loading="lazy"
+               alt="chisel's board of its own architecture: modules, functions and the calls between them, with the generated architecture file beside it">
+        </figure>
+      </article>
+
+      <article class="project">
+        <div class="project-head">
+          <h2 translate="no">terrain</h2>
+          <a class="btn btn--primary btn--sm" href="https://github.com/ejorr53040/terrain" rel="noopener">GitHub</a>
+        </div>
+        <figure class="frame">
+          <svg class="diagram" viewBox="0 0 1280 800" role="img"
+               aria-label="terrain pipeline: webcam frames go to terrain-hands, which runs MediaPipe hand models through ONNX to get a Pose; terrain-gestures turns poses over time into Tap, Drag, Flick, Spread and Wave; those drive the Bevy 3D world and the real desktop">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path class="head" d="M0 0 L10 5 L0 10 z"/>
+              </marker>
+            </defs>
+
+            <rect class="box" x="60" y="330" width="200" height="140" rx="10"/>
+            <text x="160" y="392" text-anchor="middle" font-size="26">webcam</text>
+            <text class="dim" x="160" y="426" text-anchor="middle" font-size="17">frames</text>
+
+            <rect class="box hl" x="340" y="300" width="270" height="200" rx="10"/>
+            <text x="475" y="358" text-anchor="middle" font-size="22">terrain-hands</text>
+            <text class="dim" x="475" y="398" text-anchor="middle" font-size="17">MediaPipe · ONNX</text>
+            <text class="dim" x="475" y="426" text-anchor="middle" font-size="17">21 landmarks</text>
+            <text class="dim" x="475" y="454" text-anchor="middle" font-size="17">→ Pose</text>
+
+            <rect class="box" x="690" y="300" width="270" height="200" rx="10"/>
+            <text x="825" y="358" text-anchor="middle" font-size="22">terrain-gestures</text>
+            <text class="dim" x="825" y="398" text-anchor="middle" font-size="17">Tap · Drag · Flick</text>
+            <text class="dim" x="825" y="426" text-anchor="middle" font-size="17">Spread · Wave</text>
+
+            <rect class="box" x="1030" y="170" width="200" height="150" rx="10"/>
+            <text x="1130" y="234" text-anchor="middle" font-size="24">terrain-app</text>
+            <text class="dim" x="1130" y="268" text-anchor="middle" font-size="17">Bevy 3D world</text>
+
+            <rect class="box" x="1030" y="480" width="200" height="150" rx="10"/>
+            <text x="1130" y="544" text-anchor="middle" font-size="24">desktop</text>
+            <text class="dim" x="1130" y="578" text-anchor="middle" font-size="17">pointer · windows</text>
+
+            <path class="wire" d="M260 400 H332" marker-end="url(#arrow)"/>
+            <path class="wire" d="M610 400 H682" marker-end="url(#arrow)"/>
+            <path class="wire" d="M960 370 C995 370 990 245 1022 245" marker-end="url(#arrow)"/>
+            <path class="wire" d="M960 430 C995 430 990 555 1022 555" marker-end="url(#arrow)"/>
+
+            <text class="dim" x="640" y="720" text-anchor="middle" font-size="16">Rust · Bevy · ONNX Runtime</text>
+          </svg>
+        </figure>
+      </article>
     </main>
-
-    <section class="sky" aria-labelledby="contact-h">
-      <div class="glass contact">
-        <div>
-          <h2 id="contact-h" class="h3">Contact</h2>
-          <p>Hiring for Summer&nbsp;2027? Email is fastest.</p>
-        </div>
-        <div class="actions">
-          <a class="btn btn--primary" href="mailto:ejorr@uvm.edu">Email ejorr@uvm.edu</a>
-          <a class="btn btn--link" href="assets/EJ_Orr_Resume.pdf">Resume (PDF)</a>
-        </div>
-      </div>
-    </section>
 
     <footer class="meta">
       <a href="https://github.com/ejorr53040" rel="noopener">github.com/ejorr53040</a>
-      <a href="https://www.linkedin.com/in/ethan-orr" rel="noopener">linkedin.com/in/ethan-orr</a>
+      <a href="https://www.linkedin.com/in/ethan-orr-05856435b/" rel="noopener">linkedin.com/in/ethan-orr-05856435b</a>
+      <a href="mailto:ejorr@uvm.edu">ejorr@uvm.edu</a>
     </footer>
 
   </div>
 
 <script>
+  /* Demos loop, so they autoplay only without reduced motion and always have a
+     pause control; under reduced motion the poster frame is the demo. */
   (function () {
-    var root = document.documentElement, btn = document.getElementById("theme");
-    var saved = null;
-    try { saved = localStorage.getItem("theme"); } catch (e) { /* private mode */ }
-    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
-
-    function isDark() {
-      var t = root.getAttribute("data-theme");
-      if (t) return t === "dark";
-      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    function sync() {
-      var d = isDark();
-      root.style.colorScheme = d ? "dark" : "light";
-      btn.textContent = d ? "light" : "dark";
-      btn.setAttribute("aria-pressed", String(d));
-      btn.setAttribute("aria-label", d ? "Switch to light theme" : "Switch to dark theme");
-    }
-    btn.addEventListener("click", function () {
-      var next = isDark() ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      try { localStorage.setItem("theme", next); } catch (e) { /* ditto */ }
-      sync();
-    });
-    if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", sync);
-    sync();
-  })();
-
-  /* The demo loops for 30s, so it plays only without reduced motion and always
-     has a pause control; under reduced motion the poster frame is the demo. */
-  (function () {
-    var v = document.getElementById("demo"), t = document.getElementById("demo-toggle");
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    t.hidden = false;
-    function label() { t.textContent = v.paused ? "Play" : "Pause"; }
-    t.addEventListener("click", function () { v.paused ? v.play() : v.pause(); });
-    v.addEventListener("play", label);
-    v.addEventListener("pause", label);
-    var p = v.play();
-    if (p && p.catch) p.catch(label);
+    document.querySelectorAll(".frame video").forEach(function (v) {
+      var t = v.parentNode.querySelector(".toggle");
+      t.hidden = false;
+      function label() { t.textContent = v.paused ? "Play" : "Pause"; }
+      t.addEventListener("click", function () { v.paused ? v.play() : v.pause(); });
+      v.addEventListener("play", label);
+      v.addEventListener("pause", label);
+      var p = v.play();
+      if (p && p.catch) p.catch(label);
+    });
   })();
 </script>
 </body>
