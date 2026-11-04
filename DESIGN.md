@@ -20,7 +20,8 @@ The brand skill is the source of truth for tokens and rules
 
 - terrain's demo is an inline SVG diagram so it picks up the page fonts and tokens;
   swap it for a recording once one exists.
-- Favicons (`assets/icons/`) and `assets/og.png` come from `gen_pattern.py favicon` / `og`.
+- Favicons (`assets/icons/`) come from `gen_pattern.py favicon`. `assets/og.png` is a
+  1200×630 headless-Chromium screenshot of the live page; retake it when the top changes.
 
 ## Do's and Don'ts
 
